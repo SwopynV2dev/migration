@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Orden de Servicio</title>
+</head>
+<style>
+  @page {
+    margin: 0;
+  }
+
+  body {
+    font-family: 'MontserratBold', Helvetica, Arial, sans-serif
+  }
+
+  table {
+    width: 100%;
+    border-bottom: 1px solid black;
+    text-align: left;
+    border-collapse: collapse;
+    margin: 0 0 1em 0;
+    caption-side: top;
+    font-size: 10pt;
+  }
+
+  caption,
+  td,
+  th {
+    padding: 0.3em;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid black;
+    width: 25%;
+  }
+
+  caption {
+    font-weight: bold;
+    font-style: italic;
+  }
+</style>
+
+<body>
+  <br>
+  <div style="margin: 0px;">
+    <div style="margin-bottom: 0px; text-align: left; padding-left: 20px; margin-top: -30px;">
+
+      <div style="text-align: center; margin-bottom: 0px; margin-top: 20px;">
+        {% if order.inspection == 1 %}
+        <h2 style="font-weight: bold; margin-bottom: 0">INSPECCIÓN DE SERVICIO</h2>
+        {% else %}
+        <h2 style="font-weight: bold; margin-bottom: 0">ORDEN DE SERVICIO</h2>
+        {% endif %}
+      </div>
+
+      <div style="width: 130px; display: inline-block; vertical-align: top;">
+        {% if imagen.pdf_logo %}
+        <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ pdf_logo }}" style="width: 120px; height: auto;" >
+        {% endif %}
+      </div>
+
+      <div
+        style="width: 290px; display: inline-block; margin-top: 0px; text-align: justify; vertical-align: top; margin-right: 4px;">
+        <p style="margin-top: 0px; margin-bottom: 0">
+          {% if order.compania == 650 %}
+          <span style="color:rgb(0, 0, 0);font-size:7.5pt">Responsable Sanitario: {{ jobCenterProfile.health_manager }} |
+            Licencia No: {{ jobCenterProfile.license }}
+            | Whatsapp: {{ jobCenterProfile.whatsapp_personal }} | Teléfono: {{ jobCenterProfile.cellphone }} | Razón
+            Social: {{ jobCenterProfile.business_name }} |
+            {{ jobCenterProfile.rfc_country }}: {{ jobCenterProfile.rfc }}| {% if addressProfile %} {{
+            addressProfile.street }} #{{ addressProfile.num_ext }}, {{ addressProfile.location }},
+            {{ addressProfile.municipality }}, {{ addressProfile.state }}. {% endif %} | Email: {{
+            jobCenterProfile.email_personal }} | Facebook: {{ jobCenterProfile.facebook_personal }}.
+          </span>
+          {% else %}
+          <span style="color:black;font-size:7.5pt">Responsable Sanitario: {{ jobCenterProfile.health_manager }} |
+            Licencia No: {{ jobCenterProfile.license }}
+            | Whatsapp: {{ jobCenterProfile.whatsapp_personal }} | Teléfono: {{ jobCenterProfile.cellphone }} | Razón
+            Social: {{ jobCenterProfile.business_name }} |
+            {{ jobCenterProfile.rfc_country }}: {{ jobCenterProfile.rfc }}| {% if addressProfile %} {{
+            addressProfile.street }} #{{ addressProfile.num_ext }}, {{ addressProfile.location }},
+            {{ addressProfile.municipality }}, {{ addressProfile.state }}. {% endif %} | Email: {{
+            jobCenterProfile.email_personal }} | Facebook: {{ jobCenterProfile.facebook_personal }}.
+          </span>
+          {% endif %}
+        </p>
+      </div>
+      <div style="width: 110px; display: inline-block; margin-top: 5px; text-align: center; vertical-align: top;">
+        {% if qrcode %}
+        <img src="data:image/png;base64,{{ qrcode }}" style="width: 100px; height: auto;" >
+        <span style="font-size:7pt;font-weight:bold; margin-bottom: 0px;">Licencia Sanitaria</span>
+        {% endif %}
+      </div>
+
+      <div
+        style="width: 212px; display: inline-block; margin-top: 0px; font-size: 8pt; margin-left: 10px; vertical-align: top;">
+        <p style="margin-bottom: 2px; margin-top: 0px">
+          <span style="font-size:8pt; font-weight: bold">NO. SERVICIO: </span>
+          <span style="color:red;font-weight:bold;font-size:8pt;">{{ order.id_service_order }}</span>
+        </p>
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">TIPO DE SERVICIO: </span>
+          {% if order.inspection == 1 %}
+          <span style="font-size:8pt;">Inspección</span>
+          {% else %}
+          <span style="font-size:8pt;">{{ order.establecimiento }}</span>
+          {% endif %}
+        </p>
+        {% if order.show_price == 1 or order.show_price_customer == 1 %}
+        {% if order.show_price_customer == 1 and order.show_price == 0 %}
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">IMPORTE: </span>
+          <span style="font-size:8pt;">{{ symbol_country }}{{ order.total }}</span>
+        </p>
+        {% elif order.show_price_customer == 1 and order.show_price == 1 %}
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">IMPORTE: </span>
+          <span style="font-size:8pt;">{{ symbol_country }}{{ order.total }}</span>
+        </p>
+        {% endif %}
+        {% endif %}
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">FECHA: </span>
+          <span style="font-size:8pt;">{{ order.initial_date}}</span>
+        </p>
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">HORA DE ENTRADA: </span>
+          <span style="font-size:8pt;">{{ order.start_event }}</span>
+        </p>
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">HORA DE SALIDA: </span>
+          <span style="font-size:8pt;">{{ order.final_event }}</span>
+        </p>
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          {% if order.is_main == 1 and order.is_shared == 1 %}
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">TÉCNICO RESPONSABLE: </span>
+          <span style="font-size:8pt;">{{ order.name }}</span>
+        </p>
+        <span style="font-size:8pt; font-weight: bold">AUXILIARES: </span>
+        {% for employeeAuxiliare in employeeAuxiliares %}
+        <span style="font-size:8pt;">{{ employeeAuxiliare.name }}, </span>
+        {% endfor %}
+
+        {% else %}
+        <p style="margin-bottom: 2px; margin-top: 2px">
+          <span style="font-size:8pt; font-weight: bold">TÉCNICO APLICADOR: </span>
+          <span style="font-size:8pt;">{{ order.name }}</span>
+        </p>
+        {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: left; ; margin: 0 20px 0 20px;">
+    <p style="margin-top: 0px; margin-bottom: 7px">
+      {% if jobCenterProfile.id == 291 %}
+      <img src="https://pwa-public.s3.us-west-1.amazonaws.com/custom-certificates/eco-obregon/tca-logo.png" alt="logo"
+        width="150px" height="45px">
+      <br>
+      {% endif %}
+      <span style="font-size:11pt; font-weight: bold"> Atención a {{ order.cliente }} {% if order.empresa %} | {{
+        order.empresa }} {% endif %}
+        {% if order.billing %} | {{ order.billing }} {% endif %}
+      </span><br>
+      <span style="font-size:10pt">{{ order.address }} #{{ order.address_number }}, {{ order.colony }}, {{
+        order.municipality }}, {{ order.state }}
+        | Tel: {{ order.cellphone }} | {{ order.email }}</span>
+    </p>
+  </div>
+  <br><br>
+  
+  <div style="margin-left: 20px; margin-right: 18px; padding-left: 0px; margin-top: -30px; border: solid 1px">
+    <div style="width: 358px; display: inline-block; margin-top: 0px; vertical-align: top">
+      <span
+        style="font-size:10pt;font-weight:bold;color:black; margin-top: -20px; margin-left: 10px;border-bottom: 2px solid;">
+        INSPECCIÓN DEL LUGAR
+      </span>
+      <br>
+      <div style="border-bottom: 1px solid;border-color:black;margin-left: 10px">
+        <span style="font-size:9pt;font-weight:bold;color:black">PLAGA Y GRADO DE INFESTACION:</span>
+        <br>
+        <div style="margin-left:0px;font-size:9pt;margin-top:0px;">
+          {% for p in plaga %}
+          {{ p.plaga }} - {{ p.infestacion }},
+          {% endfor %}
+        </div>
+      </div>
+      <div style="border-color:black; margin-left: 10px; border-bottom: 1px solid;">
+        <span style="font-size:9pt;font-weight:bold;color:black;">ÁREAS DE ANIDAMIENTO</span><br>
+        <div style="font-size:9pt;margin-top:0px;">
+          {% for a in ani %}
+          {{ a.nesting_areas }},
+          {% endfor %}
+        </div>
+      </div>
+      <div style="border-color:black; margin-left: 10px">
+        <span style="font-size:9pt;font-weight:bold;color:black;">COMENTARIOS</span><br>
+        <div style="font-size:9pt;margin-top:0px;">
+          {% for a in ani %}
+          {{ a.commentary }}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div style="width: 1px; display: inline-block; margin-top: 0px">
+
+    </div>
+
+    <div style="width: 358px; display: inline-block; font-size: 8pt; margin-top: 0px; vertical-align: top">
+      <span style="font-size:10pt;font-weight:bold;color:black; margin-left: 10px; border-bottom: 2px solid;">
+        CONDICIONES DEL LUGAR
+      </span>
+      {% if order.inspection != 1 %}
+      <br>
+      <span style="font-size:9pt;font-weight:bolder;color:black; margin-left: 10px">
+        CUMPLIÓ CON INDICACIONES
+      </span>
+      <br>
+      <div style="margin-left:10px;font-size:9pt;margin-top:0px;border-bottom: 1px solid black">
+        {% if indi.indications == 1 %}
+        Sí
+        {% elif indi.indications == 2 %}
+        No
+        {% elif indi.indications == 3 %}
+        Una Parte
+        {% endif %}
+      </div>
+      {% endif %}
+      <span style="font-size:9pt;font-weight:bold;color:black; margin-left: 10px">ORDEN Y LIMPIEZA</span><br>
+      <div style="margin-left:10px;font-size:9pt;margin-top:0px;border-bottom: 1px solid black">
+        {% for item in ins %}
+        {{ item.order }},
+        {% endfor %}
+      </div>
+      <span style="font-size:9pt;font-weight:bold;color:black; margin-left: 10px;">ACCESOS RESTRINGIDOS</span><br>
+      <div style="margin-left:10px;font-size:9pt;margin-top:0px; border-bottom: 1px solid;">
+        {% for placeConditionMerge in placeConditionsMerge %}
+        {% if placeConditionMerge.restricted_access %}
+        {{ placeConditionMerge.restricted_access }},
+        {% endif %}
+        {% endfor %}
+      </div>
+      <span style="font-size:9pt;font-weight:bold;color:black; margin-left: 10px">COMENTARIOS</span><br>
+      <div style="margin-left:10px;font-size:9pt;margin-top:0px;">
+        {% for placeConditionMerge in placeConditionsMerge %}
+        {% if placeConditionMerge.commentary %}
+        {{ placeConditionMerge.commentary }},
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+  <br>
+  <div style="margin-left: 20px; margin-right: 18px; padding-left: 0px; margin-top: -20px; border: solid 1px">
+
+    <div style="width: 358px; display: inline-block; margin-top: 0px; vertical-align: top">
+
+      <div style="border-color:black;margin-left:10px;">
+        <span style="font-size:10pt;font-weight:bold;color:black; border-bottom: 2px solid;">
+          CONTROL DE PLAGAS
+        </span>
+      </div>
+      <div style="border-color:black;margin-left:10px; border-bottom: 1px solid;">
+        <span style="font-size:9pt;font-weight:bold;color:black;">ÁREA A CONTROLAR</span><br>
+        <div style="margin-left:0px;font-size:9pt; margin-top: 0px">
+          {% for c in area_c %}
+          {{ c.control_areas }},
+          {% endfor %}
+        </div>
+      </div>
+      <div style="border-color:black;margin-left:10px">
+        <span style="font-size:9pt;font-weight:bold;color:black">COMENTARIOS</span><br>
+        <div style="margin-left:0px;font-size:9pt; margin-top: 0px">
+          {% for c in area_c %}
+          {% if c.commentary %}
+          {{ c.commentary }},
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if jobCenterProfile.id == 489 or jobCenterProfile.id == 446 %}
+      <div style="border-color:black;margin-left:10px">
+        <span style="font-size:9pt;font-weight:bold;color:black">COMENTARIOS INTERNOS</span><br>
+        <div style="margin-left:0px;font-size:9pt; margin-top: 0px">
+          {{ order.observations }}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <div style="width: 1px; display: inline-block; margin-top: 0px">
+
+    </div>
+
+    <div style="width: 358px; display: inline-block; font-size: 8pt; margin-top: 0px; vertical-align: top">
+
+      <div style="border-color:black;margin-left:10px">
+        <br>
+        <span style="font-size:9pt;font-weight:bold;color:black;">MÉTODO DE APLICACIÓN</span><br>
+        <div style="margin-left:0px;font-size:9pt;margin-top: 0px;">
+          {% for cd in area_cd %}
+          {{ cd.apli }},
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {% if order.inspection != 1 %}
+  <br>
+  <div style="margin-left: 20px; margin-right: 18px; padding-left: 0px; margin-top: -20px; border: solid 1px">
+
+    <div style="width: 725px; display: inline-block; margin-top: 0px; vertical-align: top">
+
+      <div style="margin-left:8px;font-size:9pt">
+        <table>
+          <thead>
+            <tr>
+              <td style="color:black;font-weight:bold">PLAGUICIDA APLICADO</td>
+              <td style="color:black;font-weight:bold">REGISTRO PLAGUICIDA</td>
+              <td style="color:black;font-weight:bold">INGREDIENTE</td>
+              <td style="color:black;font-weight:bold">DOSIS</td>
+              <td style="color:black;font-weight:bold">CANTIDAD</td>
+              {% if order.is_main == 1 and order.is_shared == 1 %}
+              <td style="color:black;font-weight:bold">TÉCNICO</td>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for cl in control %}
+            <tr>
+              <td style="font-size:8pt">{{ cl.product }}</td>
+              <td style="font-size:8pt">{{ cl.register }}</td>
+              <td style="font-size:8pt">{{ cl.active_ingredient }}</td>
+              <td style="font-size:8pt">{{ cl.dose }}</td>
+              <td style="font-size:8pt">{{ cl.cantidad }} <br> {{ cl.type_unit }}</td>
+              {% if order.is_main == 1 and order.is_shared == 1 %}
+              <td style="font-size:8pt">{{ cl.name_employee }}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div style="width: 1px; display: inline-block; margin-top: 0px">
+
+    </div>
+
+    <div style="width: 1px; display: inline-block; font-size: 8pt; margin-top: 0px; vertical-align: top">
+
+    </div>
+
+  </div>
+  {% endif %}
+
+  </div>
+
+  <br>
+  <div style="margin-left: 20px; margin-right: 18px; padding-left: 0px; border: solid 1px;">
+    <div style="text-align: center; margin: 0 0 0 0">
+      <h5 style="margin-top: 0px">Inspección Del Lugar (Evidencia)</h5>
+    </div>
+    {% for inspectionPlaceImage in inspectionPlaceImages %}
+    <span style="margin-left: 5px; margin-right: 5px;">
+      {% if order.compania == 646 %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ inspectionPlaceImage }}"style="width:113px; height: 113px;">
+      {% else %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ inspectionPlaceImage }}" style="width:70px; height: 70px;">
+      {% endif %}
+    </span>
+    {% endfor %}
+    <div style="text-align: center; margin: 0 0 0 0">
+      <h5 style="margin-top: 0px">Condiciones Del Lugar (Evidencia)</h5>
+    </div>
+    {% for conditionPlaceImage in conditionPlaceImages %}
+    <span style="margin-left: 5px; margin-right: 5px">
+      {% if order.compania == 646 %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ conditionPlaceImage .url_s3 }}" style="width:113px; height: 113px;">
+      {% else %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ conditionPlaceImage.url_s3 }}" style="width:70px; height: 70px;">
+      {% endif %}
+    </span>
+    {% endfor %}
+    <div style="text-align: center; margin: 0 0 0 0">
+      <h5 style="margin-top: 0px">Control de Plagas (Evidencia)</h5>
+    </div>
+    {% for plagueControlsImage in plagueControlsImages %}
+    <span style="margin-left: 5px; margin-right: 5px">
+      {% if order.compania == 646 %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ plagueControlsImage.url_s3 }}" style="width:113px; height: 113px;">
+      {% else %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ plagueControlsImage.url_s3 }}" style="width:70px; height: 70px;">
+      {% endif %}
+    </span>
+    {% endfor %}
+    {% if order.inspection != 1 %}
+    <div style="text-align: center; margin: 0 0 0 0">
+      <h5 style="margin-top: 0px">Pagos (Evidencia)</h5>
+    </div>
+    {% endif %}
+    {% for cashImageMerge in cashImagesMerge %}
+    <span style="margin-left: 5px; margin-right: 5px">
+      {% if order.compania == 646 %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ cashImageMerge.url_s3 }}" style="width:113px; height: 113px;">
+      {% else %}
+      <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ cashImageMerge.url_s3 }}" style="width:70px; height: 70px;">
+      {% endif %}
+    </span>
+    {% endfor %}
+  </div>
+
+  <footer style="position: absolute; bottom: 15px;">
+    <div style="margin-left: 20px; margin-right: 18px; padding-left: 0px; margin-top: 0px; border-bottom: solid 1px;">
+      {% if jobCenterProfile.id == 291 %}
+      <div style="text-align: center">
+        <img src="https://pwa-public.s3.us-west-1.amazonaws.com/custom-certificates/eco-obregon/conocer.jpg" alt="logo"
+          width="100px" height="50px">
+        <img src="https://pwa-public.s3.us-west-1.amazonaws.com/custom-certificates/eco-obregon/tif-sqf.png" alt="logo"
+          width="100px" height="50px">
+        <img src="https://pwa-public.s3.us-west-1.amazonaws.com/custom-certificates/eco-obregon/sedex.jpg" alt="logo"
+          width="50px" height="50px">
+      </div>
+      {% endif %}
+      <div style="width: 372.5px; display: inline-block; margin-top: 5px; vertical-align: top; text-align: center;">
+        <div style="display: inline-block">
+          {% if f %}
+          <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ firmUrl }}" style="width: 100px;">
+          {% endif %}
+          <p style="text-align:center;font-size:6pt;font-weight:bold; margin-top: 0; margin-bottom: 0">{{ order.cliente
+            }}</p>
+          {% if f %}
+          {% if f.other_name %}
+          <p style="text-align:center;font-size:6pt;font-weight:bold; margin-top: 0; margin-bottom: 0">
+            {{ f.other_name }}
+          </p>
+          {% endif %}
+          {% endif %}
+          <span style="text-align:center;font-size:6pt;">{% if addressProfile %} {{ addressProfile.municipality }}, {{
+            addressProfile.state }}. {% endif %} {{ order.initial_date }} a
+            las {{ order.final_event}}</span>
+          <div style="text-align:justify;font-size:5px; margin-bottom: 10px; margin-left: 6px; margin-right: 6px">
+            Firmo de conformidad y a mi entera satisfacción de haber recibido el Servicio de fumigación, acepto que se
+            me
+            explicaron las indicaciones que debo realizar antes de ingresar al lugar fumigado, así como las precauciones
+            a tomar.
+            Conozco los términos y funcionamiento de la garantía del servicio.
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="width: 202px; display: inline-block; font-size: 8pt; margin-top: 0px; vertical-align: top; text-align: center;margin-right: -5px;">
+        {% if firmUrlTechnician %}
+        <img src="https://pwa-public.s3.us-west-1.amazonaws.com/{{ firmUrlTechnician }}" style="width: 100px;"><br>
+        {% endif %}
+        <p style="text-align:center;font-size:6pt; margin-top: 0; margin-bottom: 0">{{ order.name }}</p>
+        <p style="text-align:center;font-size:6pt;font-weight:bold; margin-bottom: 0; margin-top: 0">Firma del técnico
+        </p><br>
+      </div>
+
+      <div
+        style="width: 165px; display: inline-block; font-size: 8pt; margin-top: 0px; vertical-align: middle; text-align: center; margin-right: -5px;">
+        {% if order.compania == 504 %}<p>F-OPE-01</p>{% endif %}
+        {% if imagen.pdf_sello %}
+        <img src="https://pestwareapp.s3.us-east-1.amazonaws.com/{{ pdf_sello }}" alt="logo"style="width: 100px;">
+        {% endif %}
+      </div>
+
+    </div>
+
+  </footer>
+</body>
+
+</html>
