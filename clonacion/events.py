@@ -2,6 +2,7 @@ import mysql.connector
 import uuid
 from datetime import datetime, timedelta
 import os
+import sys
 from dotenv import load_dotenv
 
 from service_certificate import ServiceCertificatePDF
@@ -325,8 +326,16 @@ for quote in quotes :
                 """, (event_id.hex, employee_id))
                 source_conn_v2.commit()
             if status == 'd266c0ae53dc478391cdc62044601369':
-                ServiceCertificatePDF.build(event.get('service_order_id'),event_id )
-                ServiceOrderPDF.build(event.get('service_order_id'), event_id)
+                try:
+                    ServiceCertificatePDF.build(event.get('service_order_id'), event_id)
+                    ServiceOrderPDF.build(event.get('service_order_id'), event_id)
+                except Exception as e:
+                    # Esto atrapará cualquier excepción de Python
+                    print(f"Error generando PDFs: {e}", file=sys.stderr)
+                except SystemExit:
+                    # Evita que sys.exit() corte el flujo
+                    pass
+
 
 
             
