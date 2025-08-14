@@ -370,4 +370,3 @@ class ServiceCertificatePDF:
         upload_pdf (pdf, key  =f'events/certificates/{pk}.pdf')
         
         
-

@@ -517,3 +517,4 @@ class ServiceOrderPDF:
 
         pdf = create_pdf(context=cont,template_name  = 'service_order.html' )
         upload_pdf (pdf, key  =f'events/orders/{pk}.pdf' )
+

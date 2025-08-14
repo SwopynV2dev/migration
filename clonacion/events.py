@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+
 from service_certificate import ServiceCertificatePDF
 from service_order import ServiceOrderPDF
 
@@ -180,6 +181,7 @@ for quote in quotes :
         source_cursor.execute(query, params)
         events = source_cursor.fetchall()
 
+
         for event in events:
             source_cursor.execute("""
                 SELECT json
@@ -201,6 +203,7 @@ for quote in quotes :
                     print(f"⚠️ JSON inválido para event_id={event.get('id')}: {e}")
                     continue
             if raw_start or raw_end:
+                
                 status = 'd266c0ae53dc478391cdc62044601369'
                 start = parse_time_safe(raw_start)
                 end = parse_time_safe(raw_end)
@@ -320,5 +323,10 @@ for quote in quotes :
                     INSERT INTO events_event_employee (event_id, employee_id)
                     VALUES (%s, %s)
                 """, (event_id.hex, employee_id))
+                source_conn_v2.commit()
+            if status == 'd266c0ae53dc478391cdc62044601369':
+                ServiceCertificatePDF.build(event.get('service_order_id'),event_id )
+                ServiceOrderPDF.build(event.get('service_order_id'), event_id)
+
 
             

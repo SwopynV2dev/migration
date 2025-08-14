@@ -59,7 +59,9 @@ WHERE
                 "role" : "DL",
             }
             user = requests.post(api_url+employee.json()['id']+"/create_account/", headers=headers, json=data)
+    
 except mysql.connector.Error as e:
     print(f"Error con la tabla taxes: {e}")
 except Exception as ex:
     print(f"Error inesperado con la tabla taxes: {ex}")
+

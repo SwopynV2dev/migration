@@ -18,7 +18,7 @@ source_conn_v2 = mysql.connector.connect(
     host="23.21.191.62",
     user="hmcdcarlos",
     password="Canela243.",  
-    database="SwopynProd"
+    database="SwopynProd"   
 )
 source_cursor = source_conn.cursor(dictionary=True)     
 source_cursor_v2 = source_conn_v2.cursor(dictionary=True)     
