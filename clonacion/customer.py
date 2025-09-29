@@ -3,24 +3,28 @@ import uuid
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+load_dotenv()
 
 
 
 conn_old = mysql.connector.connect(
-    host="164.92.98.250",
-    user="Workbench",
-    password="password20@@",
-    database="pwa"
+    host=os.getenv("DB_HOST_pwa1"),
+    user= os.getenv("DB_USER_pwa1")  ,
+    password= os.getenv("DB_PASSWORD_pwa1")  ,
+    database= os.getenv("DB_NAME_pwa1")  ,
+    ssl_disabled=True
 )
+
+
 conn_new = mysql.connector.connect(
-    host="23.21.191.62",
-    user="hmcdcarlos",
-    password="Canela243.",
-    database="SwopynProd"
+    host=os.getenv("DB_HOST_pwa2"),
+    user= os.getenv("DB_USER_pwa2")  ,
+    password= os.getenv("DB_PASSWORD_pwa2")  ,
+    database= os.getenv("DB_NAME_pwa2")  ,
+    ssl_disabled=True
 )
 
 
-load_dotenv()
 id_job_center_origin = os.getenv("UUID_ORIGINAL_pwa1")
 id_job_center = os.getenv("UUID_NUEVO")
 bussines_activity = os.getenv("UUID_BUSSINESS")

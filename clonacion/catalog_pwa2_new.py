@@ -3,16 +3,18 @@ import uuid
 from datetime import datetime
 import os
 from dotenv import load_dotenv  
+load_dotenv()
+
 
 conn = mysql.connector.connect(
-    host="23.21.191.62",
-    user="hmcdcarlos",
-    password="Canela243.",
-    database="SwopynProd",
+    host=os.getenv("DB_HOST_pwa2"),
+    user= os.getenv("DB_USER_pwa2")  ,
+    password= os.getenv("DB_PASSWORD_pwa2")  ,
+    database= os.getenv("DB_NAME_pwa2")  ,
     ssl_disabled=True
 )
 
-load_dotenv()
+
 uuid_original = os.getenv("UUID_ORIGINAL_PW2")  
 uuid_nuevo = os.getenv("UUID_NUEVO")
 

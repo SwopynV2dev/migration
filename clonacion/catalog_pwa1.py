@@ -4,11 +4,13 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+
 source_conn = mysql.connector.connect(
-    host="164.92.98.250",
-    user="Workbench",
-    password="password20@@",
-    database="pwa"
+    host=os.getenv("DB_HOST_pwa1"),
+    user= os.getenv("DB_USER_pwa1")  ,
+    password= os.getenv("DB_PASSWORD_pwa1")  ,
+    database= os.getenv("DB_NAME_pwa1")  ,
+    ssl_disabled=True
 )
 
 
