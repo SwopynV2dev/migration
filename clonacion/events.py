@@ -34,13 +34,14 @@ search = id_job_center.replace("-", "")
 
 def get_employee_id( uuid_job_center, user_name):
     query = """
-    SELECT id FROM SwopynProd.employees_employee where  job_center_id= %s and name = %s 
+    SELECT id FROM SwopynProd.employees_employee where  job_center_id= %s and name = %s  and is_deleted = false
     LIMIT 1;
     """
     source_cursor_v2.execute(query, (uuid_job_center, user_name))
     result = source_cursor_v2.fetchone()
     source_cursor_v2.fetchall()
     return result['id'] if result else None
+
 
 
 def get_service_type_id( uuid_job_center, service_name):
@@ -140,7 +141,7 @@ for quote in quotes :
                 JOIN 
                     quotations q ON so.id_quotation = q.id
                 JOIN 
-                    users u ON so.user_id = u.id
+                    employees u ON e.id_employee = u.id
                 JOIN 
                     type_services st ON e.service_type = st.id
                 WHERE 
