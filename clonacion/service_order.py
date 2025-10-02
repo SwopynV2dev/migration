@@ -239,7 +239,6 @@ class ServiceOrderPDF:
                     pic_dict['url_s3'] = pic_dict['file_route']
                     condition_place_images_merge.append(pic_dict)
                 
-                # Fotos de control de plagas
                 plague_pictures_query = """
                     SELECT pcp.id, pcp.file_route
                     FROM plague_control_pictures as pcp
@@ -253,7 +252,6 @@ class ServiceOrderPDF:
                     pic_dict['url_s3'] =pic_dict['file_route']
                     plague_controls_images_merge.append(pic_dict)
                 
-                # Fotos de efectivo
                 cash_pictures_query = """
                     SELECT cp.id, cp.file_route
                     FROM cash_pictures as cp
@@ -267,7 +265,6 @@ class ServiceOrderPDF:
                     pic_dict['url_s3'] = pic_dict['file_route']
                     cash_images_merge.append(pic_dict)
         
-        # Grado de Infestación de Plagas
         main_plague_query = """
             SELECT pl.name as plaga, ie.name as infestacion
             FROM place_inspection_plague_type as pt
