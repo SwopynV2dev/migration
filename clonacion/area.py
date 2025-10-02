@@ -33,7 +33,6 @@ try:
         old_customers = source_cursor.fetchall()
 
         for old_customer in old_customers:
-            # Buscar cliente en nueva BD
             check_query = """
                 SELECT * 
                 FROM SwopynProd.customers_customer 
@@ -42,14 +41,18 @@ try:
             dest_cursor.execute(check_query, (f"CL-{old_customer['id']}", search))
             new_customer = dest_cursor.fetchone()
             dest_cursor.fetchall()
+            source_cursor.execute("SELECT * FROM pwa.monitorings where id_customer = %s;", (old_customer['id'],))
+            monitoring = dest_cursor.fetchone()
+            dest_cursor.fetchall()
+            
 
             if not new_customer:
                 print(f"⚠️ Cliente {old_customer['id']} no encontrado en nueva BD, se omite.")
                 continue
 
             source_cursor.execute(
-                "SELECT id, text, parent FROM pwa.monitoring_trees WHERE id_monitoring = %s AND parent = 1 ORDER BY id;",
-                (id_company_job_center,)
+                "SELECT id, text, parent FROM pwa.monitoring_trees WHERE id_monitoring = %s AND parent = 1 ",
+                (monitoring,)
             )
             zones = source_cursor.fetchall()
 
@@ -68,8 +71,8 @@ try:
                 dest_cursor.execute(insert_zone, values_zone)
                 conn_new.commit()
                 source_cursor.execute(
-                    "SELECT id, name FROM pwa.monitoring_trees WHERE id_monitoring = %s AND id_node = %s ORDER BY id;",
-                    (id_company_job_center, zone['id'])
+                    "SELECT id, name FROM pwa.monitoring_trees WHERE id_monitoring = %s AND id_node = %s ",
+                    (monitoring, zone['parent'])
                 )
                 areas = source_cursor.fetchall()
 
@@ -95,8 +98,8 @@ try:
                     dest_cursor.execute(insert_nesting, values_nesting)
                     conn_new.commit()
                     source_cursor.execute(
-                        "SELECT id, `key`, name, station_type_id FROM pwa.monitoring_trees WHERE id_monitoring = %s AND id_node = %s ORDER BY id;",
-                        (id_company_job_center, area['id'])
+                        "SELECT id, `key`, name, station_type_id FROM pwa.monitoring_trees WHERE id_monitoring = %s AND id_node = %s",
+                        (monitoring, area['parent'])
                     )
                     stations = source_cursor.fetchall()
 
