@@ -91,7 +91,7 @@ for customer_old in customers_old:
     source_cursor_v2.execute("""
                 SELECT id from customers_customer
                 WHERE folio = %s and job_center_id = %s;
-                             """,(f'CL-{customer_old.get('id')}',search,))
+                             """,(f'CL-{customer_old.get("id")}',search,))
     customer_new = source_cursor_v2.fetchone()
     source_cursor_v2.fetchall()
     source_cursor.execute("""
@@ -158,10 +158,10 @@ GROUP BY
             now,
             quotation.get("folio") or f'{(folio+1)}' ,
             '', 
-            customer_new.get('id'),
+            customer_new.get("id"),
             employee_id,
             search,
-            service_type_id.get('id') if service_type_id else None,
+            service_type_id.get("id") if service_type_id else None,
             status,  
             quotation.get("description") or (service_type_id.get('description') if service_type_id else None),
             0, 
@@ -177,7 +177,7 @@ GROUP BY
             source_conn_v2.commit()
         source_cursor.execute("""
         SELECT * FROM custom_quotes WHERE id_quotation = %s;
-        """, (quotation.get('id'),))
+        """, (quotation.get("id"),))
         concepts = source_cursor.fetchall() 
         
         insert_query = """
