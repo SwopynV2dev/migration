@@ -50,25 +50,26 @@ try:
                     print(f"⚠️ Cliente {old_customer['id']} no encontrado en nueva BD, se omite.")
                     continue
 
-                dest_cursor.execute(
-                    "SELECT COUNT(*) AS total FROM pest_control_zone WHERE customer_id = %s",
-                    (new_customer['id'],)
-                )
-                zone_exists = dest_cursor.fetchone()
-                dest_cursor.fetchall()
-
-                if zone_exists and zone_exists['total'] > 0:
-                    print(f"⏩ Cliente {new_customer['id']} ya tiene zonas, se brinca.")
-                    continue
+               
 
                 source_cursor.execute(
                     "SELECT id, text, parent,id_node FROM pwa.monitoring_trees WHERE id_monitoring = %s AND parent = 1 ",
                     (monitoring['id'],)
                 )
                 zones = source_cursor.fetchall()
+                
 
                 for zone in zones:
-                    print (old_customer)
+                    dest_cursor.execute(
+                    "SELECT COUNT(*) AS total FROM pest_control_zone WHERE customer_id = %s and name = %s ",
+                    (new_customer['id'], zone['text'],)
+                    )
+                    zone_exists = dest_cursor.fetchone()
+                    dest_cursor.fetchall()
+
+                    if zone_exists and zone_exists['total'] > 0:
+                        print(f"⏩ Cliente {new_customer['id']} ya tiene zonas, se brinca.")
+                        continue
                     insert_zone = """
                         INSERT INTO pest_control_zone (
                             id, is_active, is_deleted, created_at, updated_at, deleted_at, 
