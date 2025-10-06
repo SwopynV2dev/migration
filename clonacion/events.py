@@ -113,7 +113,7 @@ for quote in quotes :
         custom = res.get("id")
         source_cursor_v2.execute("""
         SELECT id FROM SwopynProd.quotes_quote where folio = %s;
-        """,(f'{quote.get('id_quotation')}',))
+        """,(f'{quote.get("id_quotation")}',))
         quote_id = source_cursor_v2.fetchone().get('id') 
         source_cursor_v2.fetchall()
         if excluded_folios:
