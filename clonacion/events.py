@@ -2,11 +2,11 @@ import mysql.connector
 import uuid
 from datetime import datetime, timedelta
 import os
-import sys
 from dotenv import load_dotenv
+import json
 
-from service_certificate import ServiceCertificatePDF
-from service_order import ServiceOrderPDF
+
+
 
 now = datetime.now()
 
@@ -196,13 +196,12 @@ for quote in quotes :
             raw_end = None
             for r in rows:
                 try:
-                    import json
                     log_data = json.loads(r['json'])  
                     raw_start = log_data.get("start_event")
                     raw_end = log_data.get("finish_event")
                     break 
                 except json.JSONDecodeError as e:
-                    print(f"⚠️ JSON inválido para event_id={event.get("id")}: {e}")
+                    print(f"⚠️ JSON inválido para event_id={event.get('id')}: {e}")
                     continue
             if raw_start or raw_end:
                 
