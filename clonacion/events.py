@@ -106,11 +106,11 @@ excluded_folios = [row['folio'] for row in source_cursor_v2.fetchall()]
 for quote in quotes : 
     source_cursor_v2.execute("""
     SELECT id FROM SwopynProd.customers_customer where folio = %s;
-    """,(f'CL-{quote.get('custom')}',))
+    """,(f'CL-{quote.get("custom")}',))
     res = source_cursor_v2.fetchone()
     source_cursor_v2.fetchall()
     if res :        
-        custom = res.get('id')
+        custom = res.get("id")
         source_cursor_v2.execute("""
         SELECT id FROM SwopynProd.quotes_quote where folio = %s;
         """,(f'{quote.get('id_quotation')}',))
@@ -147,7 +147,7 @@ for quote in quotes :
                 WHERE 
                     q.id = %s AND so.id_service_order NOT IN ({placeholders})
             """
-            params = [quote.get('id')] + excluded_folios
+            params = [quote.get("id")] + excluded_folios
         else:
             query = """
                 SELECT 
@@ -178,7 +178,7 @@ for quote in quotes :
                 WHERE 
                     q.id = %s
             """
-            params = [quote.get('id')]
+            params = [quote.get("id")]
 
         source_cursor.execute(query, params)
         events = source_cursor.fetchall()
@@ -189,7 +189,7 @@ for quote in quotes :
                 SELECT json
                 FROM pwa.app_services_log
                 WHERE event_id = %s;
-            """, (event.get('id'),))
+            """, (event.get("id"),))
             rows = source_cursor.fetchall()
 
             raw_start = None
@@ -198,11 +198,11 @@ for quote in quotes :
                 try:
                     import json
                     log_data = json.loads(r['json'])  
-                    raw_start = log_data.get('start_event')
-                    raw_end = log_data.get('finish_event')
+                    raw_start = log_data.get("start_event")
+                    raw_end = log_data.get("finish_event")
                     break 
                 except json.JSONDecodeError as e:
-                    print(f"⚠️ JSON inválido para event_id={event.get('id')}: {e}")
+                    print(f"⚠️ JSON inválido para event_id={event.get("id")}: {e}")
                     continue
             if raw_start or raw_end:
                 
@@ -285,7 +285,7 @@ for quote in quotes :
                 now,           
                 now,           
                 event.get("event_title"),
-                event.get('id_service_order'),           
+                event.get("id_service_order"),           
                 event.get("initial_date"),
                 event.get("final_date"),
                 event.get("initial_hour"),
